@@ -160,3 +160,24 @@ outputs/
 | **Morphological opening** | Erosion (3×3 minimum) → dilation (3×3 maximum), both implemented with NumPy sliding windows |
 | **Connected components** | Pure-Python BFS flood-fill; top 5 components by area selected for bounding boxes |
 | **Texture analysis** | Mean gradient magnitude and pixel std-dev compared before/after filtering across all scene types |
+
+---
+
+## Conclusion
+
+This pipeline demonstrates that core remote sensing tasks — denoising, filtering, and object detection — can be implemented entirely from first principles, without relying on high-level vision libraries. The approach is particularly valuable in constrained or educational environments where understanding the underlying mechanics matters as much as the result.
+
+The median filter proves effective even at extreme noise ratios (50%), recovering structural features like bridge decks and building outlines well enough for downstream detection. The BFS-based object detector successfully identifies dominant bright regions across all three scene types, though dense urban scenes (church, center) produce more fragmented bounding boxes due to higher intra-scene variance. Texture analysis confirms that scene class directly affects filter sensitivity — low-texture scenes like the bridge lose proportionally less detail than high-texture urban scenes.
+
+The pipeline is easily extensible: swap in a different kernel size for Phase E, adjust the minimum component area threshold in Phase G, or plug in additional scene types to expand the texture comparison.
+
+---
+
+## Dependencies
+
+| Library | Version | Usage |
+|---------|---------|-------|
+| `numpy` | ≥ 1.21 | Array operations — pixel arithmetic, masking, gradient computation, MSE/PSNR |
+| `Pillow` | ≥ 9.0 | Image I/O — opening, converting, and saving RGB/greyscale images |
+| `matplotlib` | ≥ 3.5 | Visualisation — histograms, channel splits, comparison figures, bar charts |
+| `tkinter` | built-in | GUI dialogs — file picker, image count prompt, noise ratio input |
